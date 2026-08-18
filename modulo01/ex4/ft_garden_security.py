@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 # ########################################################################### #
 #   shebang: 1                                                                #
 #                                                          :::      ::::::::  #
@@ -8,15 +7,18 @@
 #   By: rgoulart <rgoulart@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/08/06 18:36:30 by rgoulart            #+#    #+#            #
-#   Updated: 2026/08/06 18:36:30 by rgoulart           ###   ########.fr      #
+#   Updated: 2026/08/18 17:41:43 by rgoulart           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
 class Plant:
     def __init__(self, name, height, age):
         self.name = name
-        self._height = height
-        self._age = age
+        self._height = 0.0
+        self._age = 0
+
+        self.set_height(height)
+        self.set_age(age)
 
     def show(self):
         print(f"{self.name}: {self._height}cm, {self._age} days old")

@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula por Exercício - Python 00 a 04</title>
+<style>
+  :root{
+    --bg:#0b0d10;
+    --panel:#141820;
+    --panel-2:#1d232d;
+    --paper:#f7f7f1;
+    --ink:#1c1c1c;
+    --line:#323945;
+    --text:#ecf0f3;
+    --muted:#aab3bf;
+    --faint:#737d8d;
+    --accent:#00babc;
+    --accent-2:#ffd84d;
+    --danger:#ff6b6b;
+    --ok:#56d68a;
+    --radius:6px;
+    --side:300px;
+    --max:980px;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font:16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  a{ color:inherit; }
+  code,kbd,pre{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  .layout{ display:flex; min-height:100vh; }
+  .sidebar{
+    position:sticky;
+    top:0;
+    width:var(--side);
+    height:100vh;
+    overflow:auto;
+    flex:0 0 var(--side);
+    background:#07090c;
+    border-right:1px solid var(--line);
+    padding:18px 14px 40px;
+  }
+  .brand{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px;
+    margin-bottom:18px;
+    background:linear-gradient(180deg,#111720,#0a0d12);
+  }
+  .brand strong{ display:block; font-size:1rem; letter-spacing:.02em; }
+  .brand span{ display:block; color:var(--muted); font-size:.82rem; margin-top:4px; }
+  .nav-title{
+    color:var(--accent-2);
+    font:700 .75rem/1 ui-monospace, monospace;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin:20px 4px 8px;
+  }
+  .nav{ list-style:none; margin:0; padding:0; }
+  .nav a{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    text-decoration:none;
+    color:var(--muted);
+    border-radius:var(--radius);
+    padding:7px 8px;
+    font-size:.86rem;
+  }
+  .nav a:hover{ background:var(--panel); color:var(--text); }
+  .nav .tag{ color:var(--accent); font-family:ui-monospace, monospace; font-size:.78rem; min-width:42px; }
+  main{ width:100%; }
+  .top{
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:rgba(11,13,16,.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:10px 24px;
+  }
+  .progress{ height:3px; background:#202631; border-radius:99px; overflow:hidden; max-width:var(--max); margin:auto; }
+  .progress span{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--accent-2)); }
+  .content{ max-width:var(--max); margin:0 auto; padding:34px 24px 90px; }
+  .hero{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:24px;
+    background:var(--panel);
+    margin-bottom:28px;
+  }
+  .hero h1{ margin:0 0 10px; font-size:2rem; line-height:1.15; }
+  .hero p{ margin:8px 0 0; color:var(--muted); }
+  .rule{
+    border-left:4px solid var(--accent-2);
+    padding:10px 14px;
+    background:#181b1f;
+    margin-top:18px;
+    color:var(--text);
+  }
+  .module{
+    margin:42px 0 18px;
+    border-top:2px solid var(--accent);
+    padding-top:16px;
+  }
+  .module h2{
+    font:800 1.35rem/1.2 ui-monospace, monospace;
+    margin:0;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+  }
+  .module p{ color:var(--muted); margin:8px 0 0; }
+  .exercise{
+    scroll-margin-top:64px;
+    margin:22px 0;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--panel);
+    overflow:hidden;
+  }
+  .ex-head{
+    padding:18px 20px;
+    border-bottom:1px solid var(--line);
+    background:#10151d;
+  }
+  .ex-kicker{
+    font:700 .78rem/1 ui-monospace, monospace;
+    color:var(--accent-2);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    margin-bottom:8px;
+  }
+  .ex-head h3{ margin:0; font-size:1.26rem; }
+  .subject{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:1px;
+    background:var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .subject div{ background:#0e131a; padding:10px 12px; min-width:0; }
+  .subject span{ display:block; color:var(--faint); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; }
+  .subject code{ color:var(--text); font-size:.84rem; word-break:break-word; }
+  .ex-body{ padding:18px 20px 22px; }
+  .brief{
+    border-left:3px solid var(--accent);
+    background:#10151d;
+    padding:10px 12px;
+    margin:0 0 16px;
+  }
+  .brief p{ margin:0; color:var(--muted); }
+  .subject-note{
+    border:1px solid #3b4660;
+    border-left:4px solid #7ba7ff;
+    background:#151d2d;
+    border-radius:var(--radius);
+    padding:10px 12px;
+    margin:0 0 16px;
+  }
+  .subject-note strong{ color:#b9ccff; }
+  .subject-note p{ margin:0; color:#d9e2ff; }
+  .concept-grid{ display:grid; grid-template-columns:1fr; gap:12px; }
+  .concept{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:#111720;
+    padding:14px;
+  }
+  .concept h4{
+    margin:0 0 8px;
+    font-size:1rem;
+    color:var(--text);
+  }
+  .concept h4 span{ color:var(--accent); font-family:ui-monospace, monospace; }
+  .concept p{ margin:7px 0; color:var(--muted); }
+  .concept .why{ color:var(--text); }
+  .concept .how{ color:#d5dbe4; }
+  .concept .pitfall{ color:#ffd6a0; }
+  .example{
+    margin-top:10px;
+    background:#07090c;
+    border:1px solid #252c37;
+    border-radius:var(--radius);
+    padding:10px;
+    overflow:auto;
+  }
+  .example pre{ margin:0; color:#d7dde6; font-size:.86rem; line-height:1.5; }
+  .do-next{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:16px;
+    border-top:1px solid var(--line);
+    padding-top:14px;
+  }
+  .do-next strong{ color:var(--ok); }
+  .next-link{
+    text-decoration:none;
+    border:1px solid var(--line);
+    background:var(--panel-2);
+    border-radius:var(--radius);
+    padding:7px 10px;
+    color:var(--text);
+    font-size:.86rem;
+  }
+  .next-link:hover{ border-color:var(--accent); }
+  .known{
+    display:inline-block;
+    color:var(--faint);
+    border:1px dashed var(--line);
+    border-radius:999px;
+    padding:2px 8px;
+    font-size:.78rem;
+    margin:2px 4px 2px 0;
+  }
+  .warn{ color:var(--accent-2); }
+  @media (max-width:940px){
+    .layout{ display:block; }
+    .sidebar{ position:relative; width:auto; height:auto; }
+    .subject{ grid-template-columns:1fr; }
+    .content{ padding:24px 14px 70px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <strong>Python Piscine</strong>
+      <span>Leitura incremental por exercício, no estilo subject.</span>
+    </div>
+
+    <div class="nav-title">Módulo 00</div>
+    <ul class="nav">
+      <li><a href="#m00-ex0"><span class="tag">ex00</span>Hello Garden</a></li>
+      <li><a href="#m00-ex1"><span class="tag">ex01</span>Garden Name</a></li>
+      <li><a href="#m00-ex2"><span class="tag">ex02</span>Plot Area</a></li>
+      <li><a href="#m00-ex3"><span class="tag">ex03</span>Harvest Total</a></li>
+      <li><a href="#m00-ex4"><span class="tag">ex04</span>Age Check</a></li>
+      <li><a href="#m00-ex5"><span class="tag">ex05</span>Water Reminder</a></li>
+      <li><a href="#m00-ex6"><span class="tag">ex06</span>Count Harvest</a></li>
+      <li><a href="#m00-ex7"><span class="tag">ex07</span>Seed Inventory</a></li>
+    </ul>
+
+    <div class="nav-title">Módulo 01</div>
+    <ul class="nav">
+      <li><a href="#m01-ex0"><span class="tag">ex00</span>First Seed</a></li>
+      <li><a href="#m01-ex1"><span class="tag">ex01</span>Data Organizer</a></li>
+      <li><a href="#m01-ex2"><span class="tag">ex02</span>Growth Simulator</a></li>
+      <li><a href="#m01-ex3"><span class="tag">ex03</span>Plant Factory</a></li>
+      <li><a href="#m01-ex4"><span class="tag">ex04</span>Security System</a></li>
+      <li><a href="#m01-ex5"><span class="tag">ex05</span>Plant Types</a></li>
+      <li><a href="#m01-ex6"><span class="tag">ex06</span>Analytics</a></li>
+    </ul>
+
+    <div class="nav-title">Módulo 02</div>
+    <ul class="nav">
+      <li><a href="#m02-ex0"><span class="tag">ex00</span>First Exception</a></li>
+      <li><a href="#m02-ex1"><span class="tag">ex01</span>Raise Exception</a></li>
+      <li><a href="#m02-ex2"><span class="tag">ex02</span>Different Errors</a></li>
+      <li><a href="#m02-ex3"><span class="tag">ex03</span>Custom Errors</a></li>
+      <li><a href="#m02-ex4"><span class="tag">ex04</span>Finally Block</a></li>
+    </ul>
+
+    <div class="nav-title">Módulo 03</div>
+    <ul class="nav">
+      <li><a href="#m03-ex0"><span class="tag">ex00</span>Command Quest</a></li>
+      <li><a href="#m03-ex1"><span class="tag">ex01</span>Score Cruncher</a></li>
+      <li><a href="#m03-ex2"><span class="tag">ex02</span>Position Tracker</a></li>
+      <li><a href="#m03-ex3"><span class="tag">ex03</span>Achievement Hunter</a></li>
+      <li><a href="#m03-ex4"><span class="tag">ex04</span>Inventory Master</a></li>
+      <li><a href="#m03-ex5"><span class="tag">ex05</span>Stream Wizard</a></li>
+      <li><a href="#m03-ex6"><span class="tag">ex06</span>Data Alchemist</a></li>
+    </ul>
+
+    <div class="nav-title">Módulo 04</div>
+    <ul class="nav">
+      <li><a href="#m04-ex0"><span class="tag">ex00</span>Ancient Text</a></li>
+      <li><a href="#m04-ex1"><span class="tag">ex01</span>Archive Creation</a></li>
+      <li><a href="#m04-ex2"><span class="tag">ex02</span>Stream Management</a></li>
+      <li><a href="#m04-ex3"><span class="tag">ex03</span>Vault Security</a></li>
+    </ul>
+  </aside>
+
+  <main>
+    <div class="top"><div class="progress"><span id="progress"></span></div></div>
+    <div class="content">
+      <section class="hero">
+        <h1>Aula por exercício</h1>
+        <p>Leia o bloco do exercício atual, estude apenas os conceitos novos daquele ponto e então faça o exercício. Quando um conceito já apareceu antes, ele não volta como leitura obrigatória.</p>
+        <div class="rule"><strong>Regra de uso:</strong> avance de cima para baixo. Não use os exemplos como solução do subject; eles servem só para explicar a mecânica em outro contexto.</div>
+      </section>
+
+      <section class="module" id="m00"><h2>Module 00 - Growing Code</h2><p>Objetivo: funções pequenas, entrada/saída, cálculo, decisão, repetição e assinatura tipada.</p></section>
+
+      <article class="exercise" id="m00-ex0">
+        <div class="ex-head"><div class="ex-kicker">Chapter VI - Exercise 00</div><h3>Hello Garden</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex0/</code></div><div><span>Files to submit</span><code>ft_hello_garden.py</code></div><div><span>Authorized</span><code>print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Você começa com uma função que apenas mostra uma mensagem. Nada de programa principal ainda.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>programa Python</span> - conceito</h4><p class="why">Um programa Python é um arquivo de texto com extensão <code>.py</code>. O interpretador lê esse arquivo de cima para baixo e executa as instruções conforme encontra cada linha.</p><p class="how"><strong>Como usar agora:</strong> no Módulo 00 você não está montando um programa completo; está criando arquivos que serão importados/testados por outro arquivo. Por isso, qualquer código solto fora da função pode rodar na hora errada.</p><p class="pitfall"><strong>Erro comum:</strong> escrever testes no final do arquivo do exercício. Se quiser testar, use o arquivo auxiliar indicado pelo projeto ou remova chamadas extras antes de entregar.</p></div>
+            <div class="concept"><h4><span>função</span> - conceito</h4><p class="why">Uma função é um bloco de código com nome. Ela serve para guardar uma ação reutilizável. A linha <code>def nome():</code> cria a função; o bloco indentado abaixo dela é o corpo.</p><p class="how"><strong>Como usar agora:</strong> escreva exatamente a função pedida pelo subject. O corpo dela deve fazer o trabalho. Não precisa criar <code>main</code> nem chamar a função dentro do mesmo arquivo.</p><div class="example"><pre><code>def avisar():
+    print("Aviso pronto")
+
+# Nada apareceu ainda. A função só foi definida.
+# O corpo só roda quando alguém chamar avisar().</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> confundir definir com executar. Se você só escreveu <code>def</code>, a função existe, mas ainda não produziu saída.</p></div>
+            <div class="concept"><h4><span>print()</span> - conceito</h4><p class="why"><code>print()</code> envia texto para a saída padrão, normalmente o terminal. Ele é usado quando o exercício espera que a própria função mostre algo.</p><p class="how"><strong>Como usar agora:</strong> coloque dentro do <code>print()</code> exatamente o texto que deve aparecer. A função <code>print()</code> já adiciona uma quebra de linha no final por padrão.</p><div class="example"><pre><code>print("Relatório pronto")
+print("Total:", 3)</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> usar <code>return</code> quando o subject pede para exibir. <code>return</code> devolve valor para quem chamou; <code>print()</code> mostra no terminal.</p></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o exercício 00.</strong><a class="next-link" href="#m00-ex1">Próximo: M00 Ex01</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m00-ex1">
+        <div class="ex-head"><div class="ex-kicker">Chapter VII - Exercise 01</div><h3>Garden Name</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex1/</code></div><div><span>Files to submit</span><code>ft_garden_name.py</code></div><div><span>Authorized</span><code>input(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: a função agora pergunta algo ao usuário e usa a resposta na saída.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>variável</span> - conceito</h4><p class="why">Uma variável é um nome associado a um valor. Ela permite guardar uma informação para usar algumas linhas depois, em vez de repetir ou perder o valor.</p><p class="how"><strong>Como usar agora:</strong> guarde o retorno de <code>input()</code> em uma variável com nome claro. Depois use essa variável no <code>print()</code>.</p><div class="example"><pre><code>oficina = "Central Bike"
+print("Oficina:", oficina)</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> escolher nomes vagos como <code>x</code> quando o valor tem significado. Nome claro ajuda na defesa oral.</p></div>
+            <div class="concept"><h4><span>input()</span> - conceito</h4><p class="why"><code>input()</code> mostra um texto de pergunta, espera o usuário digitar algo e devolve o que foi digitado como <code>str</code>.</p><p class="how"><strong>Como usar agora:</strong> passe o prompt exatamente como o subject espera. Guarde a resposta numa variável. Neste exercício, você ainda não precisa converter para número.</p><div class="example"><pre><code>nome = input("Nome: ")
+print("Recebido:", nome)</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> achar que <code>input()</code> imprime a resposta sozinho. Ele só lê; quem mostra resultado é <code>print()</code>.</p></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: função</span><span class="known">já conhecido: print()</span></span><a class="next-link" href="#m00-ex2">Próximo: M00 Ex02</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m00-ex2">
+        <div class="ex-head"><div class="ex-kicker">Chapter VIII - Exercise 02</div><h3>Garden Plot Area</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex2/</code></div><div><span>Files to submit</span><code>ft_plot_area.py</code></div><div><span>Authorized</span><code>input(), int(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: a entrada textual precisa virar número antes de participar de cálculo.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>tipo</span> - conceito</h4><p class="why">Todo valor em Python tem um tipo. O tipo decide o que uma operação significa. <code>"5" + "3"</code> junta textos e vira <code>"53"</code>; <code>5 + 3</code> soma números e vira <code>8</code>.</p><p class="how"><strong>Como usar agora:</strong> quando o dado vai participar de cálculo, ele precisa ser número, não texto.</p></div>
+            <div class="concept"><h4><span>int()</span> - conceito</h4><p class="why"><code>int()</code> converte um valor para inteiro quando isso é possível. É a ponte entre a entrada textual do usuário e operações matemáticas.</p><p class="how"><strong>Como usar agora:</strong> leia com <code>input()</code>, converta com <code>int()</code>, guarde em uma variável numérica e só então calcule.</p><div class="example"><pre><code>largura_texto = input("Largura: ")
+largura = int(largura_texto)
+print(largura * 2)</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> fazer conta com o retorno cru de <code>input()</code>. Ele ainda é string.</p></div>
+            <div class="concept"><h4><span>operadores aritméticos</span> - conceito</h4><p class="why">Operadores aritméticos criam expressões numéricas: <code>+</code> soma, <code>-</code> subtrai, <code>*</code> multiplica, <code>/</code> divide.</p><p class="how"><strong>Como usar agora:</strong> monte uma expressão com os valores convertidos. Se precisar guardar o resultado para imprimir depois, use outra variável.</p><div class="example"><pre><code>base = 8
+altura = 4
+area = base * altura
+print("Área:", area)</code></pre></div></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: input()</span></span><a class="next-link" href="#m00-ex3">Próximo: M00 Ex03</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m00-ex3">
+        <div class="ex-head"><div class="ex-kicker">Chapter IX - Exercise 03</div><h3>Harvest Total</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex3/</code></div><div><span>Files to submit</span><code>ft_harvest_total.py</code></div><div><span>Authorized</span><code>input(), int(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Nenhum conceito novo grande. Você repete o fluxo: ler, converter, guardar, calcular, imprimir.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>decomposição</span> - conceito de apoio</h4><p class="why">Decompor é dividir um problema em passos pequenos. Quando o exercício pede várias entradas, tente enxergar o padrão: ler, converter, guardar, combinar, mostrar.</p><p class="how"><strong>Como usar agora:</strong> escreva uma linha para cada leitura, uma linha para cada conversão se isso deixar mais claro, depois uma linha para calcular o total.</p><div class="example"><pre><code>p1 = int(input("Primeiro valor: "))
+p2 = int(input("Segundo valor: "))
+p3 = int(input("Terceiro valor: "))
+total = p1 + p2 + p3
+print("Total:", total)</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> tentar compactar tudo cedo demais. Código curto que você não consegue explicar é pior que código simples em mais linhas.</p></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: int()</span><span class="known">já conhecido: operadores</span></span><a class="next-link" href="#m00-ex4">Próximo: M00 Ex04</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m00-ex4">
+        <div class="ex-head"><div class="ex-kicker">Chapter X - Exercise 04</div><h3>Plant Age Check</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex4/</code></div><div><span>Files to submit</span><code>ft_plant_age.py</code></div><div><span>Authorized</span><code>input(), int(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: escolher uma mensagem dependendo de uma condição.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>booleano</span> - conceito</h4><p class="why">Um booleano é um valor lógico: <code>True</code> ou <code>False</code>. Comparações como <code>&gt;</code>, <code>&lt;</code>, <code>==</code> e <code>!=</code> produzem booleanos.</p><p class="how"><strong>Como usar agora:</strong> transforme a frase do subject em uma pergunta de verdadeiro/falso. Ex.: “é maior que 60?” vira <code>valor &gt; 60</code>.</p><div class="example"><pre><code>tem_estoque = quantidade > 0
+print(tem_estoque)</code></pre></div></div>
+            <div class="concept"><h4><span>if/else</span> - conceito</h4><p class="why"><code>if</code> escolhe um caminho quando a condição é verdadeira. <code>else</code> escolhe o caminho alternativo quando ela é falsa.</p><p class="how"><strong>Como usar agora:</strong> coloque a mensagem do caso verdadeiro dentro do bloco do <code>if</code> e a outra mensagem dentro do <code>else</code>. A indentação faz parte da sintaxe.</p><div class="example"><pre><code>if quantidade > 0:
+    print("Há peças no estoque")
+else:
+    print("Estoque vazio")</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> errar fronteira. “Mais de 60” é <code>&gt; 60</code>, não <code>&gt;= 60</code>.</p></div>
+          </div>
+          <div class="do-next"><strong>Teste valor abaixo, acima e exatamente no limite.</strong><a class="next-link" href="#m00-ex5">Próximo: M00 Ex05</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m00-ex5">
+        <div class="ex-head"><div class="ex-kicker">Chapter XI - Exercise 05</div><h3>Water Reminder</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex5/</code></div><div><span>Files to submit</span><code>ft_water_reminder.py</code></div><div><span>Authorized</span><code>input(), int(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Nenhum conceito novo. O treino aqui é precisão de condição e de texto.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>limite numérico</span> - conceito de apoio</h4><p class="why">Um limite numérico é o ponto onde a resposta muda. O exercício pode usar palavras como “mais de”, “pelo menos”, “menor que” ou “até”. Cada uma vira uma comparação diferente.</p><p class="how"><strong>Como usar agora:</strong> antes de escrever o <code>if</code>, faça uma mini tabela com três casos: abaixo do limite, exatamente no limite e acima do limite.</p><div class="example"><pre><code># "mais de 2"
+valor = 2   # falso
+valor = 3   # verdadeiro</code></pre></div></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: if/else</span></span><a class="next-link" href="#m00-ex6">Próximo: M00 Ex06</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m00-ex6">
+        <div class="ex-head"><div class="ex-kicker">Chapter XII - Exercise 06</div><h3>Count to Harvest</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex6/</code></div><div><span>Files to submit</span><code>ft_count_harvest_iterative.py, ft_count_harvest_recursive.py</code></div><div><span>Authorized</span><code>input(), int(), print(), range()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: repetir uma ação várias vezes, primeiro com laço e depois com recursão.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>for/range()</span> - conceito</h4><p class="why"><code>range()</code> representa uma sequência de inteiros. O <code>for</code> percorre essa sequência, repetindo o bloco uma vez para cada valor.</p><p class="how"><strong>Como usar agora:</strong> se precisa contar de 1 até <code>n</code>, lembre que o fim do <code>range</code> não é incluído. Por isso, geralmente você usa <code>range(1, n + 1)</code>.</p><div class="example"><pre><code>for dia in range(1, 4):
+    print("Dia", dia)
+
+# Saída: Dia 1, Dia 2, Dia 3</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> usar <code>range(1, n)</code> e parar um número antes do necessário.</p></div>
+            <div class="concept"><h4><span>recursão</span> - conceito</h4><p class="why">Recursão acontece quando uma função chama a si mesma para resolver uma versão menor do mesmo problema. Ela precisa de um caso base, que é a condição que para as chamadas.</p><p class="how"><strong>Como usar agora:</strong> identifique o contador atual e o limite. A cada chamada, aproxime o contador do limite. Quando chegar no limite, pare.</p><div class="example"><pre><code>def contar_ate_3(atual):
+    if atual > 3:
+        return
+    print(atual)
+    contar_ate_3(atual + 1)</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> esquecer de mudar o valor na chamada recursiva; aí a condição de parada nunca chega.</p></div>
+          </div>
+          <div class="do-next"><strong>Faça a versão iterativa antes da recursiva.</strong><a class="next-link" href="#m00-ex7">Próximo: M00 Ex07</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m00-ex7">
+        <div class="ex-head"><div class="ex-kicker">Chapter XIII - Exercise 07</div><h3>Seed Inventory with Type Annotations</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex7/</code></div><div><span>Files to submit</span><code>ft_seed_inventory.py</code></div><div><span>Authorized</span><code>print(), string methods</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: a assinatura da função passa a documentar tipos esperados.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>type hints</span> - conceito</h4><p class="why">Type hints são anotações que dizem quais tipos uma função espera receber e qual tipo ela devolve. Elas servem como documentação e como base para ferramentas de checagem, como <code>mypy</code>.</p><p class="how"><strong>Como usar agora:</strong> escreva os tipos na assinatura exatamente como o subject pede. <code>-&gt; None</code> indica que a função não devolve valor útil; ela só imprime.</p><div class="example"><pre><code>def registrar(nome: str, quantidade: int) -> None:
+    print(nome, quantidade)</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> achar que type hint converte valor. <code>quantidade: int</code> não transforma string em int automaticamente.</p></div>
+            <div class="concept"><h4><span>método de string</span> - conceito de apoio</h4><p class="why">Strings são objetos. Métodos de string são ações prontas que você chama com ponto, como <code>.capitalize()</code>, <code>.lower()</code> ou <code>.strip()</code>.</p><p class="how"><strong>Como usar agora:</strong> quando o subject pedir uma forma específica de escrita, procure um método de string que produza essa transformação sem alterar o texto original manualmente.</p><div class="example"><pre><code>peca = "pedal"
+print(peca.capitalize())  # Pedal</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> esquecer que strings são imutáveis. O método devolve uma nova string; ele não altera a original.</p></div>
+          </div>
+          <div class="do-next"><strong>Siga a assinatura pedida sem alterar nomes ou ordem.</strong><a class="next-link" href="#m01">Próximo módulo</a></div>
+        </div>
+      </article>
+
+      <section class="module" id="m01"><h2>Module 01 - Code Cultivation</h2><p>Objetivo: introduzir orientação a objetos por camadas, exatamente conforme os exercícios passam a exigir.</p></section>
+
+      <article class="exercise" id="m01-ex0">
+        <div class="ex-head"><div class="ex-kicker">Exercise 00</div><h3>Planting Your First Seed</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex0/</code></div><div><span>Files to submit</span><code>ft_garden_intro.py</code></div><div><span>Authorized</span><code>print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: agora o arquivo é um programa executado diretamente, não só uma função importada por teste.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>__name__</span> - conceito</h4><p class="why">Todo arquivo Python carregado pelo interpretador é um módulo, e todo módulo recebe uma variável especial chamada <code>__name__</code>. Se o arquivo foi executado diretamente, <code>__name__</code> vale <code>"__main__"</code>. Se foi importado por outro arquivo, vale o nome do módulo.</p><p class="how"><strong>Como usar agora:</strong> use isso para diferenciar “estou rodando este arquivo como programa” de “alguém importou minhas definições”.</p><div class="example"><pre><code>print(__name__)
+
+# Rodando direto: __main__
+# Importado: nome_do_arquivo</code></pre></div></div>
+            <div class="concept"><h4><span>if __name__ == "__main__"</span> - conceito</h4><p class="why">Esse bloco cria um ponto de entrada. O código dentro dele só roda quando o arquivo é executado diretamente, não quando é importado.</p><p class="how"><strong>Como usar agora:</strong> coloque dentro desse bloco as linhas que montam e exibem o programa deste exercício. Definições reutilizáveis, como classes e funções, podem ficar fora.</p><div class="example"><pre><code>def mostrar():
+    print("Executando")
+
+if __name__ == "__main__":
+    mostrar()</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> no Módulo 00 isso era proibido; aqui passa a fazer sentido porque o subject pede um programa executável.</p></div>
+            <div class="concept"><h4><span>shebang</span> - conceito de apoio</h4><p class="why">Shebang é uma primeira linha como <code>#!/usr/bin/env python3</code>. Em sistemas Unix, ela indica qual interpretador deve rodar o arquivo quando ele é executado como comando.</p><p class="how"><strong>Como usar agora:</strong> entenda para explicar na defesa. Mesmo que você rode com <code>python3 arquivo.py</code>, o avaliador pode perguntar para que serve essa linha.</p><div class="example"><pre><code>#!/usr/bin/env python3</code></pre></div></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: variáveis</span><span class="known">já conhecido: print()</span></span><a class="next-link" href="#m01-ex1">Próximo: M01 Ex01</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m01-ex1">
+        <div class="ex-head"><div class="ex-kicker">Exercise 01</div><h3>Garden Data Organizer</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex1/</code></div><div><span>Files to submit</span><code>ft_garden_data.py</code></div><div><span>Authorized</span><code>print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Aqui nasce OOP: o subject pede uma classe para modelar várias entidades semelhantes.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>classe/objeto</span> - conceito</h4><p class="why">Uma classe é um molde que descreve um tipo de coisa. Um objeto, também chamado de instância, é uma coisa concreta criada a partir desse molde. A classe diz “todo objeto desse tipo pode ter estes dados e estes comportamentos”.</p><p class="how"><strong>Como usar agora:</strong> quando o subject diz que várias entidades têm os mesmos campos, pare de criar variáveis soltas e crie uma classe. Depois, crie uma instância para cada entidade real.</p><div class="example"><pre><code>class Ferramenta:
+    pass
+
+martelo = Ferramenta()
+chave = Ferramenta()
+
+# martelo e chave são objetos diferentes
+# criados a partir do mesmo molde.</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> achar que a classe é “uma planta específica”. A classe é o modelo; cada objeto é uma planta/ferramenta/registro específico.</p></div>
+            <div class="concept"><h4><span>atributo</span> - conceito</h4><p class="why">Atributo é um dado guardado em um objeto. Cada instância pode ter seus próprios valores para os mesmos atributos. Isso permite ter vários objetos parecidos sem misturar os dados de um com os dados do outro.</p><p class="how"><strong>Como usar agora:</strong> identifique os dados que toda entidade do subject possui. Esses dados viram atributos.</p><div class="example"><pre><code>martelo.nome = "Martelo"
+martelo.peso = 2
+
+chave.nome = "Chave inglesa"
+chave.peso = 1</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> usar variáveis globais para dados que pertencem a um objeto. Se o dado descreve uma instância, ele deve morar nela.</p></div>
+            <div class="concept"><h4><span>self</span> - conceito</h4><p class="why"><code>self</code> é a referência ao próprio objeto dentro de um método. É assim que o método sabe qual instância deve ler ou alterar. O nome <code>self</code> é convenção forte em Python.</p><p class="how"><strong>Como usar agora:</strong> coloque <code>self</code> como primeiro parâmetro dos métodos de instância. Use <code>self.atributo</code> para acessar dados daquele objeto.</p><div class="example"><pre><code>class Ferramenta:
+    def mostrar(self):
+        print(self.nome)
+
+martelo = Ferramenta()
+martelo.nome = "Martelo"
+martelo.mostrar()</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> esquecer <code>self</code> no método. Ao chamar <code>martelo.mostrar()</code>, Python passa <code>martelo</code> automaticamente como primeiro argumento.</p></div>
+            <div class="concept"><h4><span>método</span> - conceito</h4><p class="why">Método é uma função definida dentro de uma classe. Ele representa um comportamento daquele tipo de objeto. Um método pode apenas consultar dados, exibir algo ou alterar o estado do objeto.</p><p class="how"><strong>Como usar agora:</strong> transforme ações que pertencem à entidade em métodos. Se a ação usa dados do objeto, ela provavelmente deve receber <code>self</code>.</p><div class="example"><pre><code>class Ferramenta:
+    def mostrar(self):
+        print(f"{self.nome}: {self.peso}kg")</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> criar função solta quando o subject pede que a entidade tenha comportamento próprio.</p></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o Ex01 criando o molde e instâncias. Se você já souber <code>__init__</code>, pode usar, mas ele só vira conceito obrigatório no Ex03.</strong><a class="next-link" href="#m01-ex2">Próximo: M01 Ex02</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m01-ex2">
+        <div class="ex-head"><div class="ex-kicker">Exercise 02</div><h3>Plant Growth Simulator</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex2/</code></div><div><span>Files to submit</span><code>ft_plant_growth.py</code></div><div><span>Authorized</span><code>print(), range(), round()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: a classe criada antes ganha métodos que mudam o próprio objeto ao longo do tempo.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>estado do objeto</span> - conceito</h4><p class="why">Estado é o conjunto de valores atuais dos atributos de um objeto. Se um objeto tem <code>altura = 25</code> e depois passa para <code>altura = 26</code>, o estado mudou.</p><p class="how"><strong>Como usar agora:</strong> antes de escrever os métodos, desenhe o estado inicial e como ele deve ficar após cada dia/chamada. Isso evita métodos que imprimem bonito mas não atualizam nada.</p><div class="example"><pre><code># estado inicial
+sensor.temperatura = 20
+
+# depois de calibrar
+sensor.temperatura = 21</code></pre></div></div>
+            <div class="concept"><h4><span>método mutador</span> - conceito</h4><p class="why">Um método mutador altera atributos do próprio objeto. Ele é diferente de um método que apenas exibe ou calcula algo temporário.</p><p class="how"><strong>Como usar agora:</strong> se a ação deve mudar altura, idade, contador ou qualquer atributo persistente da instância, use <code>self.atributo = novo_valor</code> dentro do método.</p><div class="example"><pre><code>class Contador:
+    def aumentar(self):
+        self.valor = self.valor + 1</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> calcular um novo valor em variável local e nunca guardar em <code>self</code>. Quando o método termina, a mudança desaparece.</p></div>
+            <div class="concept"><h4><span>round()</span> - conceito de apoio</h4><p class="why"><code>round(valor, casas)</code> arredonda um número. Com uma casa decimal, <code>round(3.1415, 1)</code> vira <code>3.1</code>.</p><p class="how"><strong>Como usar agora:</strong> use quando o subject pede saída arredondada. Pense se quer guardar o valor arredondado no objeto ou só arredondar na hora de mostrar.</p><div class="example"><pre><code>medida = 12.678
+print(round(medida, 1))  # 12.7</code></pre></div></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: classe</span><span class="known">já conhecido: self</span><span class="known">já conhecido: método</span></span><a class="next-link" href="#m01-ex3">Próximo: M01 Ex03</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m01-ex3">
+        <div class="ex-head"><div class="ex-kicker">Exercise 03</div><h3>Plant Factory</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex3/</code></div><div><span>Files to submit</span><code>ft_plant_factory.py</code></div><div><span>Authorized</span><code>print(), range(), round()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: criar objetos já inicializados, sem preencher atributo por atributo depois.</p></div>
+          <div class="subject-note"><p><strong>Nota do subject, não saída do programa:</strong> você deve conseguir usar o método <code>show()</code> sem mudanças para exibir o output do exemplo. Essa frase é explicação do enunciado; ela não deve aparecer dentro do bloco preto de terminal nem ser impressa pelo programa.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>__init__</span> - conceito</h4><p class="why"><code>__init__</code> é o método chamado automaticamente quando você cria uma instância. Ele inicializa os atributos para que o objeto já nasça pronto para uso.</p><p class="how"><strong>Como usar agora:</strong> coloque em <code>__init__</code> os parâmetros que toda instância precisa receber no momento da criação. Dentro dele, copie esses valores para <code>self</code>.</p><div class="example"><pre><code>class Caixa:
+    def __init__(self, etiqueta, peso):
+        self.etiqueta = etiqueta
+        self.peso = peso
+
+caixa = Caixa("ferramentas", 12)</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> escrever <code>etiqueta = etiqueta</code>. Sem <code>self.</code>, você só criou uma variável local que some ao fim do método.</p></div>
+            <div class="concept"><h4><span>construtor completo</span> - conceito de apoio</h4><p class="why">Um construtor completo evita objetos “pela metade”. Se um objeto precisa de nome, medida e idade para funcionar, ele deve receber esses dados ao nascer.</p><p class="how"><strong>Como usar agora:</strong> compare o Ex1 com o Ex3: antes você podia criar e preencher depois; agora o subject quer instanciar e inicializar ao mesmo tempo.</p></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: atributos</span><span class="known">já conhecido: métodos</span></span><a class="next-link" href="#m01-ex4">Próximo: M01 Ex04</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m01-ex4">
+        <div class="ex-head"><div class="ex-kicker">Exercise 04</div><h3>Garden Security System</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex4/</code></div><div><span>Files to submit</span><code>ft_garden_security.py</code></div><div><span>Authorized</span><code>print(), range(), round()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: proteger dados para que valores inválidos não corrompam o objeto.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>encapsulamento</span> - conceito</h4><p class="why">Encapsular é proteger o estado interno do objeto, controlando como ele é lido e alterado. A ideia não é esconder por esconder; é impedir estados inválidos.</p><p class="how"><strong>Como usar agora:</strong> defina quais regras sempre devem ser verdadeiras. Depois faça qualquer alteração passar por métodos que validam essas regras.</p><div class="example"><pre><code># Regra de exemplo:
+# estoque nunca pode ser negativo</code></pre></div></div>
+            <div class="concept"><h4><span>atributo protegido</span> - conceito</h4><p class="why">Em Python, um atributo começando com um underscore, como <code>_peso</code>, sinaliza “uso interno”. É uma convenção entre programadores: não acesse diretamente de fora da classe.</p><p class="how"><strong>Como usar agora:</strong> guarde os valores internos como <code>self._valor</code> e ofereça métodos para ler/alterar. O subject pede convenção protegida, não <code>__valor</code> com name mangling.</p><div class="example"><pre><code>class Caixa:
+    def __init__(self, peso):
+        self._peso = peso</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> achar que underscore bloqueia acesso. Ele não bloqueia tecnicamente; ele comunica intenção.</p></div>
+            <div class="concept"><h4><span>getter/setter</span> - conceito</h4><p class="why">Getter é método de leitura controlada. Setter é método de escrita controlada. O setter valida antes de aceitar uma mudança.</p><p class="how"><strong>Como usar agora:</strong> use <code>get_...</code> para devolver o valor e <code>set_...</code> para validar e atualizar. Se o valor for inválido, imprima a mensagem pedida e mantenha o objeto consistente.</p><div class="example"><pre><code>class Caixa:
+    def set_peso(self, peso):
+        if peso < 0:
+            print("Peso inválido")
+            return
+        self._peso = peso
+
+    def get_peso(self):
+        return self._peso</code></pre></div></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o Ex04 mantendo dados antigos quando a entrada for inválida, se essa for a regra definida no seu desenho.</strong><a class="next-link" href="#m01-ex5">Próximo: M01 Ex05</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m01-ex5">
+        <div class="ex-head"><div class="ex-kicker">Exercise 05</div><h3>Specialized Plant Types</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex5/</code></div><div><span>Files to submit</span><code>ft_plant_types.py</code></div><div><span>Authorized</span><code>super(), print(), range(), round()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: criar tipos especializados que reaproveitam o comportamento comum da classe base.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>herança</span> - conceito</h4><p class="why">Herança cria uma relação “é um”. Uma subclasse é um tipo especializado da classe base. Ela reaproveita atributos/métodos comuns e adiciona o que é específico.</p><p class="how"><strong>Como usar agora:</strong> coloque na classe base o que todas as especializações têm em comum. Nas subclasses, coloque só os dados e comportamentos exclusivos.</p><div class="example"><pre><code>class Veiculo:
+    def __init__(self, nome):
+        self.nome = nome
+
+class Bicicleta(Veiculo):
+    pass
+
+bike = Bicicleta("urbana")</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> usar herança para “tem um”. Se A tem B, isso é composição; se A é um tipo de B, isso é herança.</p></div>
+            <div class="concept"><h4><span>super()</span> - conceito</h4><p class="why"><code>super()</code> dá acesso ao método da classe base a partir da subclasse. É muito usado para reaproveitar o <code>__init__</code> ou parte de um método sobrescrito.</p><p class="how"><strong>Como usar agora:</strong> no <code>__init__</code> da subclasse, chame <code>super().__init__(...)</code> com os dados comuns. Depois defina os atributos específicos da subclasse.</p><div class="example"><pre><code>class Veiculo:
+    def __init__(self, nome):
+        self.nome = nome
+
+class Bicicleta(Veiculo):
+    def __init__(self, nome, marchas):
+        super().__init__(nome)
+        self.marchas = marchas</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> esquecer <code>super().__init__()</code>. Os atributos comuns da classe base não serão criados.</p></div>
+            <div class="concept"><h4><span>sobrescrita</span> - conceito</h4><p class="why">Sobrescrever é redefinir na subclasse um método que já existe na classe base. A chamada usa a versão da subclasse, permitindo especialização.</p><p class="how"><strong>Como usar agora:</strong> se a saída da classe especializada precisa mostrar os dados comuns e também os extras, chame o método da base com <code>super()</code> e acrescente a parte específica.</p><div class="example"><pre><code>class Veiculo:
+    def mostrar(self):
+        print(self.nome)
+
+class Bicicleta(Veiculo):
+    def mostrar(self):
+        super().mostrar()
+        print("Marchas:", self.marchas)</code></pre></div></div>
+            <div class="concept"><h4><span>polimorfismo</span> - conceito de apoio</h4><p class="why">Polimorfismo permite chamar o mesmo método em objetos de tipos diferentes, confiando que cada objeto sabe responder do seu jeito.</p><p class="how"><strong>Como usar agora:</strong> mantenha métodos com o mesmo nome e o mesmo papel geral nas subclasses. Assim uma função externa pode chamar <code>objeto.show()</code> sem verificar o tipo exato.</p><div class="example"><pre><code>for item in itens:
+    item.mostrar()  # cada classe decide como se mostrar</code></pre></div></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: __init__</span><span class="known">já conhecido: show/método</span></span><a class="next-link" href="#m01-ex6">Próximo: M01 Ex06</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m01-ex6">
+        <div class="ex-head"><div class="ex-kicker">Exercise 06</div><h3>Garden Analytics</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex6/</code></div><div><span>Files to submit</span><code>ft_garden_analytics.py</code></div><div><span>Authorized</span><code>super(), print(), range(), round(), staticmethod(), classmethod()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: adicionar comportamentos ligados à classe, não só à instância, e um componente interno de estatísticas.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>@staticmethod</span> - conceito</h4><p class="why">Método estático é uma função colocada dentro da classe por organização, mas que não precisa acessar nem uma instância (<code>self</code>) nem a própria classe (<code>cls</code>).</p><p class="how"><strong>Como usar agora:</strong> use para uma pergunta utilitária ligada ao domínio. Se a lógica só depende dos parâmetros recebidos, ela é boa candidata a estática.</p><div class="example"><pre><code>class Medidor:
+    @staticmethod
+    def passou_do_limite(valor):
+        return valor > 100</code></pre></div></div>
+            <div class="concept"><h4><span>@classmethod</span> - conceito</h4><p class="why">Método de classe recebe <code>cls</code>, que representa a classe usada na chamada. Isso permite criar objetos sem fixar o nome da classe diretamente.</p><p class="how"><strong>Como usar agora:</strong> use como construtor alternativo quando existe uma forma especial de criar uma instância.</p><div class="example"><pre><code>class Caixa:
+    @classmethod
+    def vazia(cls):
+        return cls("sem etiqueta", 0)</code></pre></div><p class="pitfall"><strong>Diferença-chave:</strong> método de instância usa <code>self</code>; método de classe usa <code>cls</code>; método estático não usa nenhum dos dois.</p></div>
+            <div class="concept"><h4><span>classe aninhada</span> - conceito</h4><p class="why">Classe aninhada é uma classe definida dentro de outra. Ela é útil quando aquele conceito interno só faz sentido como parte da classe externa.</p><p class="how"><strong>Como usar agora:</strong> se o subject pede um sistema interno de estatísticas, você pode modelar esse sistema como uma classe dentro da classe principal.</p><div class="example"><pre><code>class Sensor:
+    class Estatisticas:
+        def __init__(self):
+            self.leituras = 0</code></pre></div><p class="pitfall"><strong>Cuidado:</strong> não use classe aninhada só para “organizar bonito”. Use quando existe relação forte de pertencimento.</p></div>
+            <div class="concept"><h4><span>contador interno</span> - conceito</h4><p class="why">Contador interno registra quantas vezes uma ação aconteceu. Ele fica dentro do objeto para manter a estatística junto do comportamento observado.</p><p class="how"><strong>Como usar agora:</strong> incremente o contador no começo ou fim de cada método monitorado. Depois crie um método para exibir as estatísticas sem expor detalhes demais.</p><div class="example"><pre><code>def mostrar(self):
+    self._stats.show_calls += 1
+    print("dados...")</code></pre></div></div>
+            <div class="concept"><h4><span>composição</span> - conceito de apoio</h4><p class="why">Composição é relação “tem um”. Um objeto guarda outro objeto como parte dele. Isso é diferente de herança, que é relação “é um”.</p><p class="how"><strong>Como usar agora:</strong> pense no componente de estatísticas como algo que a instância possui. A planta não “é uma estatística”; ela “tem estatísticas”.</p><div class="example"><pre><code>class Painel:
+    def __init__(self):
+        self.estatisticas = Estatisticas()</code></pre></div></div>
+          </div>
+          <div class="do-next"><strong>Para cada método, pergunte: precisa de self, de cls ou de nenhum?</strong><a class="next-link" href="#m02">Próximo módulo</a></div>
+        </div>
+      </article>
+
+      <section class="module" id="m02"><h2>Module 02 - Garden Guardian</h2><p>Objetivo: tratar falhas esperadas, criar erros de domínio e garantir limpeza.</p></section>
+
+      <article class="exercise" id="m02-ex0">
+        <div class="ex-head"><div class="ex-kicker">Exercise 00</div><h3>Agricultural Data Validation</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex0/</code></div><div><span>Files to submit</span><code>ft_first_exception.py</code></div><div><span>Authorized</span><code>int(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: uma conversão pode falhar, e o programa precisa continuar.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>exceção</span> - conceito</h4><p class="why">Exceção é um erro detectado enquanto o programa está rodando. Ela interrompe o fluxo normal e sobe pela pilha de chamadas até alguém tratar, ou até o programa encerrar com traceback.</p><p class="how"><strong>Como usar agora:</strong> pense em exceção como uma falha esperada de entrada/dado, não como “qualquer bug”. Você vai proteger a parte que pode falhar e mostrar que o programa continua.</p></div>
+            <div class="concept"><h4><span>try/except</span> - conceito</h4><p class="why"><code>try</code> delimita o trecho arriscado. <code>except</code> diz o que fazer se uma exceção específica acontecer naquele trecho.</p><p class="how"><strong>Como usar agora:</strong> coloque dentro do <code>try</code> só a operação que pode falhar. Isso deixa claro qual erro você está tratando.</p><div class="example"><pre><code>try:
+    numero = int("abc")
+except ValueError as erro:
+    print("Entrada inválida:", erro)</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> colocar o programa inteiro dentro de um <code>try</code> gigante e esconder a linha que realmente falha.</p></div>
+            <div class="concept"><h4><span>ValueError</span> - conceito</h4><p class="why"><code>ValueError</code> acontece quando a operação é válida para aquele tipo, mas o conteúdo do valor não serve. Converter string para inteiro é permitido; converter <code>"abc"</code> para inteiro não.</p><p class="how"><strong>Como usar agora:</strong> capture <code>ValueError</code> ao testar entradas que não podem virar número.</p><div class="example"><pre><code>int("25")   # ok
+int("abc")  # ValueError</code></pre></div></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o Ex00 demonstrando que o programa não quebra.</strong><a class="next-link" href="#m02-ex1">Próximo: M02 Ex01</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m02-ex1">
+        <div class="ex-head"><div class="ex-kicker">Exercise 01</div><h3>Agricultural Data Validation Pipeline</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex1/</code></div><div><span>Files to submit</span><code>ft_raise_exception.py</code></div><div><span>Authorized</span><code>int(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: um número pode ser válido para Python, mas inválido para a regra do domínio.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>raise</span> - conceito</h4><p class="why"><code>raise</code> dispara uma exceção manualmente. Ele é usado quando o Python não vê erro técnico, mas a sua regra do domínio vê um valor inválido.</p><p class="how"><strong>Como usar agora:</strong> converta primeiro. Depois, se o número estiver fora da faixa permitida, use <code>raise</code> com uma mensagem clara.</p><div class="example"><pre><code>def validar_nivel(nivel):
+    if nivel < 0:
+        raise ValueError("nível não pode ser negativo")
+    return nivel</code></pre></div></div>
+            <div class="concept"><h4><span>validação de faixa</span> - conceito de apoio</h4><p class="why">Validação de faixa verifica se um número está dentro de limites aceitáveis. Isso é diferente de verificar se o dado é número.</p><p class="how"><strong>Como usar agora:</strong> separe as duas perguntas: “consegui converter?” e “o valor convertido está dentro dos limites?”.</p><p class="pitfall"><strong>Erro comum:</strong> tratar tudo como erro de conversão. Um número fora da faixa é outro tipo de problema conceitual.</p></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: try/except</span><span class="known">já conhecido: ValueError</span></span><a class="next-link" href="#m02-ex2">Próximo: M02 Ex02</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m02-ex2">
+        <div class="ex-head"><div class="ex-kicker">Exercise 02</div><h3>Different Types of Problems</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex2/</code></div><div><span>Files to submit</span><code>ft_different_errors.py</code></div><div><span>Authorized</span><code>print(), open(), int()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: capturar erros diferentes separadamente e também em grupo.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>ZeroDivisionError</span> - conceito</h4><p class="why">Acontece quando o código tenta dividir por zero. É um erro matemático detectado em tempo de execução.</p><p class="how"><strong>Como usar agora:</strong> crie um caso mínimo que tente uma divisão por zero e capture especificamente esse tipo.</p><div class="example"><pre><code>try:
+    resultado = 10 / 0
+except ZeroDivisionError:
+    print("não é possível dividir por zero")</code></pre></div></div>
+            <div class="concept"><h4><span>FileNotFoundError</span> - conceito</h4><p class="why">Acontece quando <code>open()</code> tenta abrir um arquivo que não existe no caminho informado.</p><p class="how"><strong>Como usar agora:</strong> tente abrir um nome de arquivo claramente inexistente para demonstrar esse erro.</p><div class="example"><pre><code>try:
+    arquivo = open("arquivo_que_nao_existe.txt")
+except FileNotFoundError:
+    print("arquivo não encontrado")</code></pre></div></div>
+            <div class="concept"><h4><span>TypeError</span> - conceito</h4><p class="why">Acontece quando a operação não faz sentido para os tipos envolvidos, como tentar somar string e inteiro diretamente.</p><p class="how"><strong>Como usar agora:</strong> produza um caso simples e proposital. O objetivo é demonstrar o erro, não escrever lógica real errada.</p><div class="example"><pre><code>try:
+    valor = "idade: " + 20
+except TypeError:
+    print("tipos incompatíveis")</code></pre></div></div>
+            <div class="concept"><h4><span>múltiplos except</span> - conceito</h4><p class="why">Você pode tratar tipos diferentes em blocos separados ou capturar vários tipos em um único <code>except</code> usando uma tupla.</p><p class="how"><strong>Como usar agora:</strong> use blocos separados quando as mensagens precisam ser diferentes. Use tupla quando a reação é a mesma.</p><div class="example"><pre><code>try:
+    operar()
+except (ValueError, TypeError) as erro:
+    print("dado inválido:", erro)</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> capturar <code>Exception</code> cedo demais. O genérico engole os específicos.</p></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o Ex02 com um caso mínimo para cada erro.</strong><a class="next-link" href="#m02-ex3">Próximo: M02 Ex03</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m02-ex3">
+        <div class="ex-head"><div class="ex-kicker">Exercise 03</div><h3>Making Your Own Error Types</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex3/</code></div><div><span>Files to submit</span><code>ft_custom_errors.py</code></div><div><span>Authorized</span><code>print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: criar erros próprios para o domínio.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>exceção personalizada</span> - conceito</h4><p class="why">Uma exceção personalizada é uma classe de erro criada por você. Ela torna a intenção mais clara do que usar sempre <code>Exception</code> ou <code>ValueError</code>.</p><p class="how"><strong>Como usar agora:</strong> crie classes simples herdando de <code>Exception</code>. Se o subject pede mensagem padrão, implemente <code>__init__</code> com valor padrão.</p><div class="example"><pre><code>class EstoqueError(Exception):
+    def __init__(self, mensagem="erro de estoque"):
+        super().__init__(mensagem)</code></pre></div></div>
+            <div class="concept"><h4><span>hierarquia de exceções</span> - conceito</h4><p class="why">Hierarquia significa ter uma exceção base e exceções mais específicas herdando dela. Capturar a base também captura as filhas.</p><p class="how"><strong>Como usar agora:</strong> crie uma classe geral para o domínio e classes específicas para categorias diferentes de problema.</p><div class="example"><pre><code>class LojaError(Exception):
+    pass
+
+class ProdutoError(LojaError):
+    pass</code></pre></div></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: classe</span><span class="known">já conhecido: herança</span></span><a class="next-link" href="#m02-ex4">Próximo: M02 Ex04</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m02-ex4">
+        <div class="ex-head"><div class="ex-kicker">Exercise 04</div><h3>Finally Block - Always Clean Up</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex4/</code></div><div><span>Files to submit</span><code>ft_finally_block.py</code></div><div><span>Authorized</span><code>print(), str.capitalize()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: garantir uma ação de limpeza com ou sem erro.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>finally</span> - conceito</h4><p class="why"><code>finally</code> é o bloco que executa sempre, com erro ou sem erro. Ele roda até mesmo antes de um <code>return</code> sair da função.</p><p class="how"><strong>Como usar agora:</strong> coloque no <code>finally</code> a mensagem ou ação que precisa acontecer independentemente do resultado.</p><div class="example"><pre><code>try:
+    print("usando recurso")
+except Exception:
+    print("deu erro")
+finally:
+    print("fechando recurso")</code></pre></div></div>
+            <div class="concept"><h4><span>cleanup</span> - conceito de apoio</h4><p class="why">Cleanup é a etapa de fechar, liberar ou encerrar algo que foi aberto/iniciado antes. Ela não deve depender do caminho feliz.</p><p class="how"><strong>Como usar agora:</strong> identifique o que foi “aberto” no começo do teste e garanta que será “fechado” no final, mesmo se uma operação no meio falhar.</p></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o Ex04 verificando que o fechamento aparece também no erro.</strong><a class="next-link" href="#m03">Próximo módulo</a></div>
+        </div>
+      </article>
+
+      <section class="module" id="m03"><h2>Module 03 - Data Quest</h2><p>Objetivo: escolher estruturas de dados conforme o formato do problema.</p></section>
+
+      <article class="exercise" id="m03-ex0">
+        <div class="ex-head"><div class="ex-kicker">Exercise 00</div><h3>Command Quest</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex0/</code></div><div><span>Files to submit</span><code>ft_command_quest.py</code></div><div><span>Authorized</span><code>import sys, sys.argv, len(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: ler dados enviados pela linha de comando.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>sys.argv</span> - conceito</h4><p class="why"><code>sys.argv</code> é uma lista de strings com o que veio pela linha de comando. O item <code>0</code> é o nome do programa; os próximos são argumentos passados pelo usuário.</p><p class="how"><strong>Como usar agora:</strong> importe <code>sys</code>, cheque o tamanho da lista e percorra os argumentos que vieram depois do nome do programa.</p><div class="example"><pre><code># $ python3 app.py azul 42
+sys.argv[0]  # app.py
+sys.argv[1]  # azul
+sys.argv[2]  # 42</code></pre></div></div>
+            <div class="concept"><h4><span>índice</span> - conceito</h4><p class="why">Índice é a posição de um elemento dentro de uma sequência. Em Python, a contagem começa em <code>0</code>, não em <code>1</code>.</p><p class="how"><strong>Como usar agora:</strong> use índice quando precisa acessar uma posição específica, e <code>for</code> quando precisa percorrer todos os elementos.</p><div class="example"><pre><code>valores = ["a", "b", "c"]
+print(valores[0])  # a</code></pre></div></div>
+            <div class="concept"><h4><span>len()</span> - conceito de apoio</h4><p class="why"><code>len()</code> devolve quantos itens existem em uma sequência ou coleção.</p><p class="how"><strong>Como usar agora:</strong> antes de acessar <code>sys.argv[1]</code>, confirme que <code>len(sys.argv)</code> é pelo menos <code>2</code>.</p><div class="example"><pre><code>if len(sys.argv) == 1:
+    print("nenhum argumento")</code></pre></div></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o Ex00 tratando o caso sem argumentos.</strong><a class="next-link" href="#m03-ex1">Próximo: M03 Ex01</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m03-ex1">
+        <div class="ex-head"><div class="ex-kicker">Exercise 01</div><h3>Score Cruncher</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex1/</code></div><div><span>Files to submit</span><code>ft_score_analytics.py</code></div><div><span>Authorized</span><code>sys.argv, len(), sum(), max(), min(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: criar uma lista própria com os valores válidos e calcular estatísticas.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>lista</span> - conceito</h4><p class="why">Lista é uma coleção ordenada e mutável. Ordenada significa que os itens têm posição. Mutável significa que você pode adicionar, remover ou trocar itens.</p><p class="how"><strong>Como usar agora:</strong> crie uma lista vazia e adicione nela apenas os valores válidos que você conseguiu converter.</p><div class="example"><pre><code>scores = []
+scores.append(1500)
+scores.append(2300)</code></pre></div></div>
+            <div class="concept"><h4><span>agregação</span> - conceito de apoio</h4><p class="why">Agregação resume uma coleção em uma informação: total, média, maior, menor, quantidade.</p><p class="how"><strong>Como usar agora:</strong> depois de montar a lista válida, aplique funções como <code>sum()</code>, <code>max()</code>, <code>min()</code> e <code>len()</code>.</p><div class="example"><pre><code>total = sum(scores)
+media = total / len(scores)</code></pre></div></div>
+            <div class="concept"><h4><span>entrada inválida parcial</span> - conceito de apoio</h4><p class="why">Entrada inválida parcial significa que alguns dados recebidos prestam e outros não. O subject pede descartar os inválidos e continuar se sobrar pelo menos um válido.</p><p class="how"><strong>Como usar agora:</strong> trate cada argumento individualmente. Se falhar, mostre erro e siga para o próximo.</p></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: sys.argv</span><span class="known">já conhecido: try/except</span></span><a class="next-link" href="#m03-ex2">Próximo: M03 Ex02</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m03-ex2">
+        <div class="ex-head"><div class="ex-kicker">Exercise 02</div><h3>Position Tracker</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex2/</code></div><div><span>Files to submit</span><code>ft_coordinate_system.py</code></div><div><span>Authorized</span><code>math.sqrt(), input(), round(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: representar coordenadas fixas e repetir entrada até ficar válida.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>tupla</span> - conceito</h4><p class="why">Tupla é uma coleção ordenada e imutável. Ela é boa para agrupar valores que formam uma unidade e não devem mudar separadamente, como uma coordenada <code>(x, y, z)</code>.</p><p class="how"><strong>Como usar agora:</strong> devolva uma tupla quando a função precisa entregar vários valores juntos. Use parênteses para deixar a intenção clara.</p><div class="example"><pre><code>posicao = (10, 4, -2)
+print(posicao[0])  # 10</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> tentar alterar uma posição da tupla. Para mudar coordenadas, crie outra tupla.</p></div>
+            <div class="concept"><h4><span>desempacotamento</span> - conceito</h4><p class="why">Desempacotar é distribuir os elementos de uma sequência em variáveis separadas. Isso deixa claro o significado de cada posição.</p><p class="how"><strong>Como usar agora:</strong> depois de obter uma coordenada, desempacote para calcular com nomes <code>x</code>, <code>y</code> e <code>z</code>.</p><div class="example"><pre><code>ponto = (3, 4, 0)
+x, y, z = ponto</code></pre></div></div>
+            <div class="concept"><h4><span>math.sqrt()</span> - conceito de apoio</h4><p class="why"><code>math.sqrt()</code> calcula a raiz quadrada de um número. Ele vem do módulo <code>math</code>, então precisa de <code>import math</code>.</p><p class="how"><strong>Como usar agora:</strong> aplique na soma dos quadrados da fórmula de distância. O conceito importante é transformar a fórmula matemática em expressão Python.</p><div class="example"><pre><code>import math
+distancia = math.sqrt(3 ** 2 + 4 ** 2)</code></pre></div></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: input()</span><span class="known">já conhecido: repetição</span></span><a class="next-link" href="#m03-ex3">Próximo: M03 Ex03</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m03-ex3">
+        <div class="ex-head"><div class="ex-kicker">Exercise 03</div><h3>Achievement Hunter</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex3/</code></div><div><span>Files to submit</span><code>ft_achievement_tracker.py</code></div><div><span>Authorized</span><code>random.*, set(), union(), intersection(), difference()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: trabalhar com coleções sem duplicatas e comparar grupos.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>set</span> - conceito</h4><p class="why">Set é uma coleção de valores únicos. Ele não preserva uma posição confiável como lista, então você não acessa “o item 0” pensando em ordem.</p><p class="how"><strong>Como usar agora:</strong> use set para conquistas, tags, nomes únicos ou qualquer caso em que repetição não deve importar.</p><div class="example"><pre><code>habilidades = {"pular", "correr", "pular"}
+print(habilidades)  # só há um "pular"</code></pre></div></div>
+            <div class="concept"><h4><span>união/interseção/diferença</span> - conceito</h4><p class="why">Operações de conjunto respondem perguntas sobre grupos: união junta tudo, interseção pega o que é comum, diferença pega o que está em um mas não no outro.</p><p class="how"><strong>Como usar agora:</strong> transforme cada pergunta do subject em uma dessas operações.</p><div class="example"><pre><code>a = {"mapa", "chave"}
+b = {"chave", "corda"}
+print(a.union(b))        # tudo
+print(a.intersection(b)) # comum
+print(a.difference(b))   # só em a</code></pre></div></div>
+            <div class="concept"><h4><span>random</span> - conceito de apoio</h4><p class="why">O módulo <code>random</code> permite escolhas pseudoaleatórias, úteis para simular dados. “Pseudo” porque não é aleatório perfeito; é suficiente para exercícios e jogos simples.</p><p class="how"><strong>Como usar agora:</strong> use apenas funções autorizadas no subject para escolher itens de uma lista fixa e montar conjuntos de teste.</p></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o Ex03 pensando nas perguntas: únicos, comuns, exclusivos e faltantes.</strong><a class="next-link" href="#m03-ex4">Próximo: M03 Ex04</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m03-ex4">
+        <div class="ex-head"><div class="ex-kicker">Exercise 04</div><h3>Inventory Master</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex4/</code></div><div><span>Files to submit</span><code>ft_inventory_system.py</code></div><div><span>Authorized</span><code>dict.keys(), dict.values(), dict.update(), sum(), list()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: mapear nomes a quantidades.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>dicionário</span> - conceito</h4><p class="why">Dicionário guarda pares chave-valor. A chave é única e funciona como nome/endereço do valor. É ideal quando você quer procurar algo pelo nome, não pela posição.</p><p class="how"><strong>Como usar agora:</strong> use o item como chave e a quantidade como valor. Antes de inserir, verifique se a chave já existe para não sobrescrever sem perceber.</p><div class="example"><pre><code>inventario = {"poção": 3, "mapa": 1}
+print(inventario["poção"])</code></pre></div></div>
+            <div class="concept"><h4><span>parsing simples</span> - conceito de apoio</h4><p class="why">Parsing é transformar texto bruto em dados estruturados. Aqui você recebe algo como <code>nome:quantidade</code> e precisa separar nome de quantidade.</p><p class="how"><strong>Como usar agora:</strong> valide se o separador existe, se há exatamente duas partes úteis e se a quantidade vira inteiro antes de guardar.</p><p class="pitfall"><strong>Erro comum:</strong> guardar dado antes de validar; depois você precisa desfazer ou lidar com estado inconsistente.</p></div>
+            <div class="concept"><h4><span>keys/values/update</span> - conceito</h4><p class="why"><code>keys()</code> acessa as chaves; <code>values()</code> acessa os valores; <code>update()</code> adiciona ou altera pares no dicionário.</p><p class="how"><strong>Como usar agora:</strong> use <code>keys()</code> para listar itens, <code>values()</code> para somar quantidades e <code>update()</code> quando o subject pedir adicionar um novo item.</p><div class="example"><pre><code>inventario.update({"corda": 2})
+total = sum(inventario.values())</code></pre></div></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: sys.argv</span><span class="known">já conhecido: lista</span></span><a class="next-link" href="#m03-ex5">Próximo: M03 Ex05</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m03-ex5">
+        <div class="ex-head"><div class="ex-kicker">Exercise 05</div><h3>Stream Wizard</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex5/</code></div><div><span>Files to submit</span><code>ft_data_stream.py</code></div><div><span>Authorized</span><code>next(), typing.Generator, random.*</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: produzir dados sob demanda em vez de montar tudo antes.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>generator</span> - conceito</h4><p class="why">Generator é um objeto que produz valores sob demanda. Em vez de criar uma lista enorme de uma vez, ele entrega um valor quando alguém pede.</p><p class="how"><strong>Como usar agora:</strong> use generator para representar fluxo de eventos. Um generator infinito pode continuar produzindo; um generator finito para quando os dados acabam.</p></div>
+            <div class="concept"><h4><span>yield</span> - conceito</h4><p class="why"><code>yield</code> parece <code>return</code>, mas não encerra definitivamente a função. Ele devolve um valor e pausa a execução, guardando onde parou.</p><p class="how"><strong>Como usar agora:</strong> dentro de um loop, use <code>yield</code> para entregar um evento por vez.</p><div class="example"><pre><code>def contar():
+    yield 1
+    yield 2
+
+g = contar()</code></pre></div></div>
+            <div class="concept"><h4><span>next()</span> - conceito</h4><p class="why"><code>next()</code> pede o próximo valor de um iterator ou generator. Cada chamada avança o estado interno do generator.</p><p class="how"><strong>Como usar agora:</strong> chame <code>next(generator)</code> quando o subject pedir obter eventos manualmente.</p><div class="example"><pre><code>print(next(g))  # 1
+print(next(g))  # 2</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> chamar uma função generator e esperar uma lista. Ela devolve um generator, não todos os valores prontos.</p></div>
+            <div class="concept"><h4><span>typing.Generator</span> - conceito de apoio</h4><p class="why">É uma anotação de tipo para documentar que a função gera valores. Ajuda a deixar claro que a função usa <code>yield</code>.</p><p class="how"><strong>Como usar agora:</strong> use se o subject pede import de <code>typing</code>. A anotação não muda a execução; ela documenta.</p></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o Ex05 separando generator infinito de consumo finito.</strong><a class="next-link" href="#m03-ex6">Próximo: M03 Ex06</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m03-ex6">
+        <div class="ex-head"><div class="ex-kicker">Exercise 06</div><h3>Data Alchemist</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex6/</code></div><div><span>Files to submit</span><code>ft_data_alchemist.py</code></div><div><span>Authorized</span><code>random.*, print(), len(), sum(), round()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: criar coleções por transformação e filtro em uma expressão.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>list comprehension</span> - conceito</h4><p class="why">List comprehension cria uma lista nova em uma expressão, percorrendo outra coleção, transformando valores e opcionalmente filtrando.</p><p class="how"><strong>Como usar agora:</strong> leia a expressão como “para cada item em coleção, produza tal valor, se tal condição for verdadeira”.</p><div class="example"><pre><code>nomes = ["Ana", "bruno", "Clara"]
+formatados = [n.capitalize() for n in nomes]</code></pre></div></div>
+            <div class="concept"><h4><span>dict comprehension</span> - conceito</h4><p class="why">Dict comprehension cria um dicionário definindo chave e valor para cada item percorrido.</p><p class="how"><strong>Como usar agora:</strong> use quando o resultado precisa ser mapa chave-valor, como nome → pontuação.</p><div class="example"><pre><code>scores = {nome: 0 for nome in nomes}</code></pre></div></div>
+            <div class="concept"><h4><span>legibilidade</span> - conceito de apoio</h4><p class="why">Comprehension é compacta, mas compactação não deve destruir clareza. Primeiro entenda com <code>for</code> normal; depois compacte se ficar legível.</p><p class="how"><strong>Como usar agora:</strong> se a comprehension tiver várias condições e transformações difíceis de explicar, quebre o raciocínio antes em passos.</p></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: listas</span><span class="known">já conhecido: dicionários</span></span><a class="next-link" href="#m04">Próximo módulo</a></div>
+        </div>
+      </article>
+
+      <section class="module" id="m04"><h2>Module 04 - Data Archivist</h2><p>Objetivo: ler, escrever, tratar falhas de arquivo, usar streams e finalizar com context manager.</p></section>
+
+      <article class="exercise" id="m04-ex0">
+        <div class="ex-head"><div class="ex-kicker">Exercise 00</div><h3>Ancient Text Recovery</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex0/</code></div><div><span>Files to submit</span><code>ft_ancient_text.py</code></div><div><span>Authorized</span><code>sys.argv, open(), typing.IO, read(), close(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: abrir arquivo recebido por argumento, ler conteúdo e fechar manualmente.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>persistência</span> - conceito</h4><p class="why">Persistência é guardar dados fora da memória temporária do programa. Variáveis somem quando o programa termina; arquivos continuam no disco.</p><p class="how"><strong>Como usar agora:</strong> pense no arquivo como a fonte dos dados. Seu programa recebe o caminho, abre esse caminho, lê o conteúdo e mostra no terminal.</p></div>
+            <div class="concept"><h4><span>open()</span> - conceito</h4><p class="why"><code>open()</code> recebe o caminho de um arquivo e um modo de abertura. Em leitura, ele devolve um objeto de arquivo que permite chamar métodos como <code>read()</code>.</p><p class="how"><strong>Como usar agora:</strong> abra o caminho vindo de <code>sys.argv</code>. Envolva em tratamento de erro, porque o caminho pode não existir ou não ter permissão.</p><div class="example"><pre><code>try:
+    arquivo = open("dados.txt", "r")
+except FileNotFoundError as erro:
+    print("Erro:", erro)</code></pre></div></div>
+            <div class="concept"><h4><span>read()/close()</span> - conceito</h4><p class="why"><code>read()</code> lê o conteúdo do arquivo a partir da posição atual do cursor. <code>close()</code> fecha o arquivo e libera o recurso do sistema operacional.</p><p class="how"><strong>Como usar agora:</strong> neste exercício, como o subject ainda autoriza e cita <code>close()</code>, leia e feche manualmente quando terminar.</p><div class="example"><pre><code>arquivo = open("dados.txt", "r")
+conteudo = arquivo.read()
+arquivo.close()</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> esquecer <code>close()</code> em um caminho de erro. No Ex03 você vai resolver isso com <code>with</code>.</p></div>
+            <div class="concept"><h4><span>typing.IO</span> - conceito de apoio</h4><p class="why"><code>typing.IO</code> é uma anotação para indicar “objeto parecido com arquivo”. Ela ajuda a explicar o tipo retornado por <code>open()</code>.</p><p class="how"><strong>Como usar agora:</strong> use como documentação se o subject pedir. Não muda o comportamento do arquivo.</p></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: sys.argv</span><span class="known">já conhecido: FileNotFoundError</span></span><a class="next-link" href="#m04-ex1">Próximo: M04 Ex01</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m04-ex1">
+        <div class="ex-head"><div class="ex-kicker">Exercise 01</div><h3>Archive Creation</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex1/</code></div><div><span>Files to submit</span><code>ft_archive_creation.py</code></div><div><span>Authorized</span><code>open(), read(), write(), close(), input(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: transformar conteúdo e opcionalmente salvar em outro arquivo.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>modo de abertura</span> - conceito</h4><p class="why">O modo de abertura diz o que você pretende fazer com o arquivo. <code>"r"</code> lê e falha se não existir. <code>"w"</code> escreve, criando o arquivo ou apagando o conteúdo anterior. <code>"a"</code> acrescenta no final.</p><p class="how"><strong>Como usar agora:</strong> use leitura para recuperar o conteúdo original e escrita para salvar o conteúdo transformado quando o usuário fornecer nome de saída.</p><div class="example"><pre><code>entrada = open("original.txt", "r")
+saida = open("novo.txt", "w")</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> abrir com <code>"w"</code> um arquivo que você queria preservar. O conteúdo antigo é apagado ao abrir.</p></div>
+            <div class="concept"><h4><span>write()</span> - conceito</h4><p class="why"><code>write()</code> grava uma string no arquivo. Diferente de <code>print()</code>, ele não coloca quebra de linha automaticamente.</p><p class="how"><strong>Como usar agora:</strong> se você quer linhas separadas no arquivo, inclua <code>"\n"</code> no texto ou preserve as quebras que já vieram da leitura.</p><div class="example"><pre><code>arquivo.write("linha 1\n")
+arquivo.write("linha 2\n")</code></pre></div></div>
+            <div class="concept"><h4><span>sobrescrita</span> - conceito de apoio</h4><p class="why">Sobrescrever significa substituir o conteúdo anterior de um arquivo. É útil quando o subject pede criar ou substituir, mas é perigoso quando feito sem intenção.</p><p class="how"><strong>Como usar agora:</strong> confirme que o usuário realmente digitou um nome de arquivo antes de salvar. Se o nome vier vazio, siga a regra do subject e não salve.</p></div>
+          </div>
+          <div class="do-next"><span><span class="known">já conhecido: open/read/close</span></span><a class="next-link" href="#m04-ex2">Próximo: M04 Ex02</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m04-ex2">
+        <div class="ex-head"><div class="ex-kicker">Exercise 02</div><h3>Stream Management</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex2/</code></div><div><span>Files to submit</span><code>ft_stream_management.py</code></div><div><span>Authorized</span><code>sys.stdin, sys.stdout, sys.stderr, readline(), flush()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: separar entrada, saída normal e saída de erro.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>stream</span> - conceito</h4><p class="why">Stream é um fluxo sequencial de dados. Você não precisa ter tudo pronto de uma vez: lê ou escreve pedaços conforme o fluxo anda.</p><p class="how"><strong>Como usar agora:</strong> trate terminal e arquivos como fontes/destinos de texto. O subject quer que você use os canais padrão diretamente.</p></div>
+            <div class="concept"><h4><span>stdin/stdout/stderr</span> - conceito</h4><p class="why"><code>sys.stdin</code> é a entrada padrão; <code>sys.stdout</code> é a saída normal; <code>sys.stderr</code> é a saída de erro. Separar erro de saída normal permite redirecionar logs e resultados de formas diferentes.</p><p class="how"><strong>Como usar agora:</strong> substitua <code>input()</code> por leitura em <code>sys.stdin</code> e envie mensagens de erro para <code>sys.stderr</code>.</p><div class="example"><pre><code>linha = sys.stdin.readline()
+sys.stderr.write("erro aqui\n")</code></pre></div><p class="pitfall"><strong>Erro comum:</strong> imprimir erro com <code>print()</code> normal quando o subject pede stderr.</p></div>
+            <div class="concept"><h4><span>readline()/flush()</span> - conceito de apoio</h4><p class="why"><code>readline()</code> lê uma linha de um stream. <code>flush()</code> força a saída pendente a ser enviada imediatamente, sem esperar o buffer encher ou o programa terminar.</p><p class="how"><strong>Como usar agora:</strong> use <code>readline()</code> para pegar uma entrada textual sem <code>input()</code>. Use <code>flush()</code> quando precisar garantir que a mensagem saiu.</p></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o Ex02 sem usar input().</strong><a class="next-link" href="#m04-ex3">Próximo: M04 Ex03</a></div>
+        </div>
+      </article>
+
+      <article class="exercise" id="m04-ex3">
+        <div class="ex-head"><div class="ex-kicker">Exercise 03</div><h3>Vault Security</h3></div>
+        <div class="subject"><div><span>Turn-in directory</span><code>ex3/</code></div><div><span>Files to submit</span><code>ft_vault_security.py</code></div><div><span>Authorized</span><code>open(), read(), write(), print()</code></div></div>
+        <div class="ex-body">
+          <div class="brief"><p>Novo passo: usar <code>with</code> para acesso seguro e retornar resultado estruturado.</p></div>
+          <div class="concept-grid">
+            <div class="concept"><h4><span>context manager</span> - conceito</h4><p class="why">Context manager é um objeto que sabe preparar um recurso ao entrar em um bloco e limpar esse recurso ao sair. Arquivos usam isso para fechar automaticamente.</p><p class="how"><strong>Como usar agora:</strong> pense nele como uma forma de não esquecer limpeza, inclusive quando acontece exceção dentro do bloco.</p></div>
+            <div class="concept"><h4><span>with</span> - conceito</h4><p class="why"><code>with</code> cria um bloco com gerenciamento automático. Com arquivo, <code>with open(...) as arquivo:</code> abre no começo e fecha no final.</p><p class="how"><strong>Como usar agora:</strong> use <code>with</code> para leitura e escrita dentro da função segura pedida pelo subject. Não chame <code>close()</code> manualmente nesse exercício.</p><div class="example"><pre><code>with open("dados.txt", "r") as arquivo:
+    conteudo = arquivo.read()
+
+# aqui o arquivo já está fechado</code></pre></div></div>
+            <div class="concept"><h4><span>tupla de resultado</span> - conceito de apoio</h4><p class="why">Uma tupla pode funcionar como protocolo de retorno. Neste exercício, o primeiro valor indica sucesso ou falha; o segundo carrega conteúdo ou mensagem de erro.</p><p class="how"><strong>Como usar agora:</strong> retorne sempre o mesmo formato, por exemplo <code>(True, conteudo)</code> no sucesso e <code>(False, mensagem)</code> na falha. Isso facilita para quem chama a função.</p><div class="example"><pre><code>def exemplo_resultado(sucesso):
+    if sucesso:
+        return (True, "conteúdo lido")
+    return (False, "arquivo não encontrado")</code></pre></div></div>
+          </div>
+          <div class="do-next"><strong>Agora faça o Ex03. Fim da trilha.</strong><a class="next-link" href="#m00">Voltar ao início</a></div>
+        </div>
+      </article>
+    </div>
+  </main>
+</div>
+<script>
+  const bar = document.getElementById('progress');
+  function updateProgress(){
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = max <= 0 ? 0 : (window.scrollY / max) * 100;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+</script>
+</body>
+</html>

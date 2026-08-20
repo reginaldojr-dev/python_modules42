@@ -13,24 +13,32 @@
 # ########################################################################### #
 
 class Plant:
-    def __init__(self, name, height, age, growth_rate):
+    def __init__(
+        self,
+        name: str,
+        height: float,
+        age: int,
+        growth_rate: float
+    ) -> None:
         self.name = name
         self.height = height
         self.age_days = age
         self.growth_rate = growth_rate
 
-    def grow(self):
-        self.height = self.height + self.growth_rate
+    def grow(self) -> None:
+        self.height += self.growth_rate
 
-    def age(self):
-        self.age_days = self.age_days + 1
+    def age(self) -> None:
+        self.age_days += 1
 
-    def show(self):
-        print(f"{self.name}: {round(self.height, 1)}cm, "
-              f"{self.age_days} days old")
+    def show(self) -> None:
+        print(
+            f"{self.name}: {round(self.height, 1)}cm, "
+            f"{self.age_days} days old"
+        )
 
 
-def growth_simulation(plant):
+def growth_simulation(plant: Plant) -> None:
     initial_height = plant.height
 
     print("=== Garden Plant Growth ===")
@@ -44,18 +52,19 @@ def growth_simulation(plant):
         plant.show()
 
     total_growth = plant.height - initial_height
-    print(f"Growth this week: {round(total_growth)}cm")
+    print(f"Growth this week: {round(total_growth, 1)}cm")
 
 
-def main():
-    rose = Plant("Rose", 25.0, 30, 0.5)
+def main() -> None:
+    rose = Plant("Rose", 25.0, 30, 0.8)
     clove = Plant("Clove", 15.0, 20, 0.1)
     daisy = Plant("Daisy", 30.0, 35, 0.8)
     sunflower = Plant("Sunflower", 35.0, 32, 0.7)
     tulip = Plant("Tulip", 13.0, 27, 0.3)
 
-    choice = input("Choose a plant: (rose, clove, daisy, "
-                   "sunflower, tulip): ").lower()
+    choice = input(
+        "Choose a plant: (rose, clove, daisy, sunflower, tulip): "
+    ).lower()
 
     if choice == "rose":
         growth_simulation(rose)

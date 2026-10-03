@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "loading-programs"
+version = "0.1.0"
+description = "Matrix data loading exercise"
+authors = ["Student <student@example.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+pandas = "*"
+numpy = "*"
+matplotlib = "*"
+requests = "*"

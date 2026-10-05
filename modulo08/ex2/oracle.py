@@ -67,8 +67,10 @@ def main() -> None:
         print('[WARN] API_KEY appears in source code')
     else:
         print('[OK] No hardcoded secrets detected')
-    if os.path.exists('.env'):
+    if os.path.exists('.env') and not missing:
         print('[OK] .env file properly configured')
+    elif os.path.exists('.env'):
+        print('[WARN] .env file exists but configuration is incomplete')
     else:
         print('[WARN] .env file not found')
     if override_active:

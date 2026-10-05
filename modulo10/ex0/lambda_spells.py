@@ -16,11 +16,13 @@ def spell_transformer(spells: list[str]) -> list[str]:
 
 
 def mage_stats(mages: list[dict[str, int]]) -> dict[str, int | float]:
-    powers = list(map(lambda mage: mage['power'], mages))
     return {
-        'max_power': max(powers),
-        'min_power': min(powers),
-        'avg_power': round(sum(powers) / len(powers), 2),
+        'max_power': max(mages, key=lambda mage: mage['power'])['power'],
+        'min_power': min(mages, key=lambda mage: mage['power'])['power'],
+        'avg_power': round(
+            sum(mage['power'] for mage in mages) / len(mages),
+            2,
+        ),
     }
 
 

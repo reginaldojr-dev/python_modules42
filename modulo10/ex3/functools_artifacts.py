@@ -13,8 +13,8 @@ def spell_reducer(spells: list[int], operation: str) -> int:
     operations: dict[str, Operation] = {
         'add': operator.add,
         'multiply': operator.mul,
-        'max': lambda left, right: max(left, right),
-        'min': lambda left, right: min(left, right),
+        'max': max,
+        'min': min,
     }
     if operation not in operations:
         raise ValueError('Unknown operation')
@@ -59,10 +59,17 @@ def spell_dispatcher() -> Callable[[Any], str]:
 
 
 if __name__ == '__main__':
+    def enchant(power: int, element: str, target: str) -> str:
+        return f'{element} enchantment on {target} with {power} power'
+
     print('Testing spell reducer...')
     print(f'Sum: {spell_reducer([10, 20, 30, 40], "add")}')
     print(f'Product: {spell_reducer([10, 20, 30, 40], "multiply")}')
     print(f'Max: {spell_reducer([10, 20, 30, 40], "max")}')
+    print('Testing partial enchanter...')
+    enchantments = partial_enchanter(enchant)
+    print(enchantments['fire']('Sword'))
+    print(enchantments['ice']('Shield'))
     print('Testing memoized fibonacci...')
     for number in [0, 1, 10, 15]:
         print(f'Fib({number}): {memoized_fibonacci(number)}')

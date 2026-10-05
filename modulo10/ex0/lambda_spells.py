@@ -1,20 +1,13 @@
 from typing import Any
 
 
-def artifact_sorter(
-    artifacts: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
+def artifact_sorter(artifacts: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(
-        artifacts,
-        key=lambda artifact: artifact['power'],
-        reverse=True,
-    )
+        artifacts, key=lambda artifact: artifact['power'], reverse=True)
 
 
-def power_filter(
-    mages: list[dict[str, Any]],
-    min_power: int,
-) -> list[dict[str, Any]]:
+def power_filter(mages: list[dict[str, Any]], min_power: int,
+                 ) -> list[dict[str, Any]]:
     return list(filter(lambda mage: mage['power'] >= min_power, mages))
 
 

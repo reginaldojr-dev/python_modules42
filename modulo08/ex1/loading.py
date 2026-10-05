@@ -4,7 +4,11 @@ from typing import Any, cast
 
 
 REQUIRED = ['pandas', 'numpy', 'matplotlib']
-OPTIONAL = ['requests']
+PURPOSES = {
+    'pandas': 'Data manipulation ready',
+    'numpy': 'Numerical computation ready',
+    'matplotlib': 'Visualization ready',
+}
 
 
 def load_module(name: str) -> ModuleType | None:
@@ -17,7 +21,7 @@ def load_module(name: str) -> ModuleType | None:
 def check_dependencies() -> dict[str, object]:
     loaded: dict[str, object] = {}
     print('Checking dependencies:')
-    for name in REQUIRED + OPTIONAL:
+    for name in REQUIRED:
         module = load_module(name)
         if module is None and name in REQUIRED:
             print(
@@ -26,7 +30,7 @@ def check_dependencies() -> dict[str, object]:
             )
         elif module is not None:
             version = getattr(module, '__version__', 'unknown')
-            print(f'[OK] {name} ({version}) - ready')
+            print(f'[OK] {name} ({version}) - {PURPOSES[name]}')
             loaded[name] = module
     return loaded
 
@@ -56,8 +60,8 @@ def main() -> None:
     print('Analysis complete!')
     print('Results saved to: matrix_analysis.png')
     print(
-        'pip uses requirements.txt; Poetry uses pyproject.toml '
-        'and poetry.lock.'
+        'pip installs from requirements.txt; Poetry installs from '
+        'pyproject.toml and poetry.lock.'
     )
 
 

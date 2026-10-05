@@ -1,6 +1,6 @@
 def create_fire() -> str:
-    return 'fire'
+    return 'Fire element created'
 
 
 def create_water() -> str:
-    return 'water'
+    return 'Water element created'

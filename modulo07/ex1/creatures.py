@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from modulo07.ex0.ex0.creatures import Creature, CreatureFactory
+from ex0.creatures import Creature, CreatureFactory
 
 
 class HealCapability(ABC):

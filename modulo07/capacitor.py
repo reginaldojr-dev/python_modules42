@@ -1,4 +1,5 @@
-from .ex1 import HealingCreatureFactory, TransformCreatureFactory
+from ex1 import HealingCreatureFactory, TransformCreatureFactory
+from ex1.creatures import HealCapability, TransformCapability
 
 
 if __name__ == '__main__':
@@ -12,7 +13,9 @@ if __name__ == '__main__':
         print(label)
         print(creature.describe())
         print(creature.attack())
-        print(creature.heal())  # type: ignore[attr-defined]
+        if isinstance(creature, HealCapability):
+            print(creature.heal())
+
     print('Testing Creature with transform capability')
     transforming = TransformCreatureFactory()
     transforming_creatures = [
@@ -23,6 +26,8 @@ if __name__ == '__main__':
         print(label)
         print(creature.describe())
         print(creature.attack())
-        print(creature.transform())  # type: ignore[attr-defined]
+        if isinstance(creature, TransformCapability):
+            print(creature.transform())
         print(creature.attack())
-        print(creature.revert())  # type: ignore[attr-defined]
+        if isinstance(creature, TransformCapability):
+            print(creature.revert())

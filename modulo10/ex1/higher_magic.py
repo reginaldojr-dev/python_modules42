@@ -4,10 +4,8 @@ from collections.abc import Callable
 Spell = Callable[[str, int], str]
 
 
-def spell_combiner(
-    spell1: Spell,
-    spell2: Spell,
-) -> Callable[[str, int], tuple[str, str]]:
+def spell_combiner(spell1: Spell, spell2: Spell,
+                   ) -> Callable[[str, int], tuple[str, str]]:
     def combined(target: str, power: int) -> tuple[str, str]:
         return spell1(target, power), spell2(target, power)
     return combined
@@ -19,10 +17,8 @@ def power_amplifier(base_spell: Spell, multiplier: int) -> Spell:
     return amplified
 
 
-def conditional_caster(
-    condition: Callable[[str, int], bool],
-    spell: Spell,
-) -> Spell:
+def conditional_caster(condition: Callable[[str, int], bool],
+                       spell: Spell) -> Spell:
     def caster(target: str, power: int) -> str:
         if condition(target, power):
             return spell(target, power)
@@ -38,14 +34,24 @@ def spell_sequence(spells: list[Spell]) -> Callable[[str, int], list[str]]:
 
 if __name__ == '__main__':
     def fireball(target: str, power: int) -> str:
-        return f'Fireball hits {target} for {power}'
+        return f'Fireball hits {target}'
 
     def heal(target: str, power: int) -> str:
-        return f'Heals {target} for {power}'
+        return f'Heals {target}'
+
+    def power_echo(target: str, power: int) -> str:
+        return str(power)
 
     combined = spell_combiner(fireball, heal)
-    amplified = power_amplifier(fireball, 3)
+    amplified = power_amplifier(power_echo, 3)
+    conditional = conditional_caster(lambda target, power: power >= 10, heal)
+    sequence = spell_sequence([fireball, heal])
     print('Testing spell combiner...')
     print(f'Combined spell result: {", ".join(combined("Dragon", 10))}')
     print('Testing power amplifier...')
     print(f'Original: 10, Amplified: {amplified("Dragon", 10).split()[-1]}')
+    print('Testing conditional caster...')
+    print(conditional('Dragon', 5))
+    print(conditional('Dragon', 10))
+    print('Testing spell sequence...')
+    print(sequence('Dragon', 10))

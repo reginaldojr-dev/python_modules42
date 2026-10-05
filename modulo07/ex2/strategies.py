@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from modulo07.ex0.ex0.creatures import Creature
-from modulo07.ex1.ex1.creatures import HealCapability, TransformCapability
+from ex0.creatures import Creature
+from ex1.creatures import HealCapability, TransformCapability
 
 
 class StrategyError(Exception):
@@ -33,7 +33,8 @@ class AggressiveStrategy(BattleStrategy):
     def act(self, creature: Creature) -> list[str]:
         if not isinstance(creature, TransformCapability):
             raise StrategyError(
-                f'{creature.name} cannot use AggressiveStrategy'
+                f"Invalid Creature '{creature.name}' "
+                'for this aggressive strategy'
             )
         return [creature.transform(), creature.attack(), creature.revert()]
 
@@ -45,6 +46,7 @@ class DefensiveStrategy(BattleStrategy):
     def act(self, creature: Creature) -> list[str]:
         if not isinstance(creature, HealCapability):
             raise StrategyError(
-                f'{creature.name} cannot use DefensiveStrategy'
+                f"Invalid Creature '{creature.name}' "
+                'for this defensive strategy'
             )
         return [creature.attack(), creature.heal()]

@@ -8,6 +8,7 @@ except ImportError:
 
 
 REQUIRED = ['DATABASE_URL', 'API_KEY', 'ZION_ENDPOINT']
+EXAMPLE_SECRET = 'replace-me'
 
 
 def load_configuration() -> dict[str, str | None]:
@@ -30,17 +31,23 @@ def main() -> None:
             'pip install -r requirements.txt'
         )
         sys.exit(1)
+    override_active = any(
+        name in os.environ
+        for name in ['MATRIX_MODE', 'API_KEY', 'DATABASE_URL', 'ZION_ENDPOINT']
+    )
     config = load_configuration()
     missing = [name for name in REQUIRED if not config[name]]
     print('Configuration loaded:')
     print(f"Mode: {config['MATRIX_MODE']}")
     database_status = (
-        'Connected to local instance'
+        'Configured'
         if config['DATABASE_URL']
         else 'Missing DATABASE_URL'
     )
     api_status = (
         'Authenticated'
+        if config['API_KEY'] and config['API_KEY'] != EXAMPLE_SECRET
+        else 'Placeholder API_KEY'
         if config['API_KEY']
         else 'Missing API_KEY'
     )
@@ -49,7 +56,25 @@ def main() -> None:
     print(f"Log Level: {config['LOG_LEVEL']}")
     zion_status = 'Online' if config['ZION_ENDPOINT'] else 'Offline'
     print(f'Zion Network: {zion_status}')
-    print('Environment variables override values from .env.')
+    print('Environment security check:')
+    source = open(__file__, encoding='utf-8').read()
+    hardcoded_secret = (
+        config['API_KEY'] is not None
+        and config['API_KEY'] != EXAMPLE_SECRET
+        and config['API_KEY'] in source
+    )
+    if hardcoded_secret:
+        print('[WARN] API_KEY appears in source code')
+    else:
+        print('[OK] No hardcoded secrets detected')
+    if os.path.exists('.env'):
+        print('[OK] .env file properly configured')
+    else:
+        print('[WARN] .env file not found')
+    if override_active:
+        print('[OK] Environment variable override active')
+    else:
+        print('[INFO] Environment variable override not active')
     if missing:
         print(f'Missing configuration: {", ".join(missing)}')
     print('The Oracle sees all configurations.')

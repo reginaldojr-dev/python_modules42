@@ -23,8 +23,10 @@ def power_validator(min_power: int) -> Callable[[F], F]:
     def decorator(func: F) -> F:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
-            power = kwargs.get('power') if 'power' in kwargs else args[-1]
-            if power is None:
+            power = kwargs.get('power')
+            if power is None and args:
+                power = args[-1]
+            if not isinstance(power, int):
                 return 'Insufficient power for this spell'
             if power < min_power:
                 return 'Insufficient power for this spell'
@@ -74,11 +76,15 @@ if __name__ == '__main__':
     def unstable_spell() -> str:
         raise RuntimeError('failed')
 
+    @power_validator(5)
+    def war_cry(power: int) -> str:
+        return 'Waaaaaaagh spelled !'
+
     print('Testing spell timer...')
     print(f'Result: {fireball()}')
     print('Testing retrying spell...')
     print(unstable_spell())
-    print('Waaaaaaagh spelled !')
+    print(war_cry(5))
     guild = MageGuild()
     print('Testing MageGuild...')
     print(MageGuild.validate_mage_name('Gandalf'))

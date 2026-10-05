@@ -76,7 +76,7 @@ def main() -> None:
         )
     except ValidationError as error:
         print('Expected validation error:')
-        print(error.errors()[0]['msg'])
+        print(error.errors()[0]['ctx']['error'])
 
 
 if __name__ == '__main__':

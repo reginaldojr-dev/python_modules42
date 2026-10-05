@@ -1,6 +1,6 @@
 def create_earth() -> str:
-    return 'earth'
+    return 'Earth element created'
 
 
 def create_air() -> str:
-    return 'air'
+    return 'Air element created'
